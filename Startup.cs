@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.Logging;
 using Library.API.Services;
 using Library.API.Entities;
+using Library.API.Models;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Swagger;
 using Library.API.Helpers;
@@ -85,6 +86,8 @@ namespace Library.API
                     $"{src.FirstName} {src.LastName}"))
                     .ForMember(dest => dest.Age, opt => opt.MapFrom(src =>
                     src.DateOfBirth.GetCurrentAge()));
+
+                cfg.CreateMap<Book, BookDto>();
             });
 
             libraryContext.EnsureSeedDataForContext();

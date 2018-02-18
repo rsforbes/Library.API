@@ -30,6 +30,7 @@ namespace Library.API.Controllers
         [HttpGet("{id}")]
         public IActionResult GetAuthor(Guid id)
         {
+            
             var authorFromRepo = _libraryRespository.GetAuthor(id);
 
             if (authorFromRepo == null)
