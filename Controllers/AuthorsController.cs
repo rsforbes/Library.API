@@ -4,6 +4,7 @@ using Library.API.Services;
 using System.Collections.Generic;
 using Library.API.Models;
 using Library.API.Helpers;
+using System;
 
 namespace Library.API.Controllers
 {
@@ -22,8 +23,24 @@ namespace Library.API.Controllers
             var authorsFromRepo = _libraryRespository.GetAuthors();
 
             var authors = Mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo);
-            
-            return new JsonResult(authors);
+
+            return Ok(authors);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetAuthor(Guid id)
+        {
+            var authorFromRepo = _libraryRespository.GetAuthor(id);
+
+            if (authorFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            var author = Mapper.Map<AuthorDto>(authorFromRepo);
+
+            return Ok(author);
+
         }
     }
 }
