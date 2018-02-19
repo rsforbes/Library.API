@@ -32,7 +32,7 @@ namespace Library.API.Controllers
         [HttpGet("{id}", Name = "GetAuthor")]
         public IActionResult GetAuthor(Guid id)
         {
-            
+
             var authorFromRepo = _libraryRespository.GetAuthor(id);
 
             if (authorFromRepo == null)
@@ -64,9 +64,10 @@ namespace Library.API.Controllers
 
             var authorToReturn = Mapper.Map<AuthorDto>(authorEntity);
 
-            return CreatedAtRoute("GetAuthor", new {id = authorToReturn.Id}, authorToReturn);
+            return CreatedAtRoute("GetAuthor", new { id = authorToReturn.Id }, authorToReturn);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPost("{id}")]
         public IActionResult BlockAuthorCreation(Guid id)
         {
@@ -76,6 +77,25 @@ namespace Library.API.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteAuthor(Guid id)
+        {
+            var authorFromRepo = _libraryRespository.GetAuthor(id);
+            if (authorFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            _libraryRespository.DeleteAuthor(authorFromRepo);
+
+            if (!_libraryRespository.Save())
+            {
+                throw new Exception($"Deleting author {id} failed on save.");
+            }
+
+            return NoContent();
         }
     }
 }
