@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Library.API.Services;
 using System.Collections.Generic;
 using Library.API.Models;
+using Library.API.Entities;
 using Library.API.Helpers;
 using System;
 
@@ -27,7 +28,7 @@ namespace Library.API.Controllers
             return Ok(authors);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetAuthor")]
         public IActionResult GetAuthor(Guid id)
         {
             
@@ -42,6 +43,27 @@ namespace Library.API.Controllers
 
             return Ok(author);
 
+        }
+
+        [HttpPost]
+        public IActionResult CreateAuthor([FromBody] AuthorForCreationDto author)
+        {
+            if (author == null)
+            {
+                return BadRequest();
+            }
+
+            var authorEntity = Mapper.Map<Author>(author);
+
+            _libraryRespository.AddAuthor(authorEntity);
+            if (!_libraryRespository.Save())
+            {
+                throw new Exception("Createing an author failed on save.");
+            }
+
+            var authorToReturn = Mapper.Map<AuthorDto>(authorEntity);
+
+            return CreatedAtRoute("GetAuthor", new {id = authorToReturn.Id}, authorToReturn);
         }
     }
 }

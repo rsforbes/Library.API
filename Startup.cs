@@ -92,6 +92,8 @@ namespace Library.API
                     src.DateOfBirth.GetCurrentAge()));
 
                 cfg.CreateMap<Book, BookDto>();
+
+                cfg.CreateMap<AuthorForCreationDto, Author>();
             });
 
             libraryContext.EnsureSeedDataForContext();
