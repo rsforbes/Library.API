@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Library.API.Services;
 using System.Collections.Generic;
 using Library.API.Models;
@@ -64,6 +65,17 @@ namespace Library.API.Controllers
             var authorToReturn = Mapper.Map<AuthorDto>(authorEntity);
 
             return CreatedAtRoute("GetAuthor", new {id = authorToReturn.Id}, authorToReturn);
+        }
+
+        [HttpPost("{id}")]
+        public IActionResult BlockAuthorCreation(Guid id)
+        {
+            if (_libraryRespository.AuthorExists(id))
+            {
+                return new StatusCodeResult(StatusCodes.Status409Conflict);
+            }
+
+            return NotFound();
         }
     }
 }
